@@ -1,0 +1,28 @@
+name: Build LiteVPN.exe
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - litevpn.py
+      - .github/workflows/build-exe.yml
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build exe
+        run: |
+          python -m pip install pyinstaller
+          python -m PyInstaller --onefile --noconsole --uac-admin --name LiteVPN litevpn.py
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: LiteVPN
+          path: dist/LiteVPN.exe
